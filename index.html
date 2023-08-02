@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-do list #4</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-MU3it3+/4npymNhzEJRE6sQ0qB5rPrYcEPWuXaKtlrGGhaQ0Md3z0STLaHeDhApn8dkG4eAQ/0mBAmK3lzkg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    
+    
+  <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="images/list_2387635.png" alt="Logo" width="50">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Hello</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Task</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Number</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Four</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="bi bi-emoji-smile-upside-down-fill"></i></a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-icons">
+        <a href="#" class="navbar-icon"><i class="bi bi-brightness-high-fill">Light</i></i></a>
+        <a href="#" class="navbar-icon"><i class="bi bi-moon-fill">Dark</i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- To-do list with jQuery -->
+  <br><br><br><br><br><br><br><br><br><br>
+  <div class="todo-container">
+    <div class="left-column">
+      <h2>To-do list <i class="bi bi-journal-code"></i></h2>
+      <label for="" class="task-label">Task</label>
+      <input type="text" class="task-input" placeholder="Enter your task">
+      <label for="" class="task-label">Tag</label>
+      <input type="text" class="tag-input" placeholder="Enter text">
+      <br><br>
+      <button class="btn add-task-btn">Add Task</button>
+    </div>
+    <div class="right-column">
+      <h6>Add your task from the left column to begin</h6>
+      <div class="tasks-list"></div>
+    </div>
+  </div>
+
+   
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" integrity="sha512-tt0F4Gvlx0dbJGM9b6jv8ayVojG9TVF5rCggLxmvxVIFwXT70OqjSmK6hqveot0zCIdCviAvdHcN9xU0JD3FQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <script>
+      $(document).ready(function () {
+      const addTaskButton = $(".add-task-btn");
+      const taskInput = $(".task-input");
+      const tasksList = $(".tasks-list");
+      let taskCount = 1;
+
+      // Function to add a new task to the right column
+      function addTaskToList(taskText) {
+        const taskItem = $("<div>").addClass("task-item");
+        taskItem.html(`
+          <span class="task-number">${taskCount}</span>
+          <span class="task-value">${taskText}</span>
+          <div class="buttons">
+            <button class="btn btn-sm btn-primary edit-btn">Edit</button>
+            <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+          </div>
+        `);
+
+        tasksList.append(taskItem);
+        taskCount++;
+        // Slide-in animation
+        taskItem.hide().slideDown(300);
+         // Animate left and right columns
+   
+        tasksList.append(taskItem);
+      }
+
+      // Function to handle the click on the Add Task button
+      function handleAddTaskClick() {
+        const taskText = taskInput.val().trim();
+        if (taskText !== "") {
+          addTaskToList(taskText);
+          taskInput.val("");
+        }
+      }
+
+      // Function to handle click on the Edit icon
+      function handleEditButtonClick(event) {
+        const taskItem = $(event.target).closest(".task-item");
+        const taskValue = taskItem.find(".task-value");
+        const editedText = prompt("Edit task:", taskValue.text().trim());
+        if (editedText !== null && editedText.trim() !== "") {
+          taskValue.text(editedText);
+        }
+      }
+
+      // Function to handle click on the Delete icon
+      function handleDeleteButtonClick(event) {
+        const taskItem = $(event.target).closest(".task-item");
+        const taskValue = taskItem.find(".task-value");
+        const shouldDelete = confirm("Do you want to remove this task?");
+        
+        if (shouldDelete) {
+          taskItem.remove();
+        }
+      }
+
+      function handleTaskItemClick(event) {
+        const taskItem = $(event.target).closest(".task-item");
+        taskItem.toggleClass("completed");
+      }
+
+      // Add event listener for the Add Task button
+      addTaskButton.on("click", handleAddTaskClick);
+      $(document).on("click", ".edit-btn", handleEditButtonClick);
+      $(document).on("click", ".delete-btn", handleDeleteButtonClick);
+      $(document).on("click", ".task-value", handleTaskItemClick);
+    });
+  </script>
+  
+</body>
+</html>
